@@ -1,0 +1,20 @@
+{
+  "name": "keyvault-managedidentity",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "dependencies": {
+    "@azure/identity": "^1.0.3",
+    "@azure/keyvault-secrets": "^4.0.4",
+    "@types/node": "^14.0.14",
+    "dotenv": "^8.2.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc -p ./src",
+    "start": "node ./src/app.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
