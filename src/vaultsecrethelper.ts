@@ -5,7 +5,7 @@ const identity = require('@azure/identity');
 // getKeyVaultSecret reads the secret from keyvault using managed identity
 //
 
-async function getKeyVaultSecret(keyVaultUrl, secretName, clientID) {
+async function getKeyVaultSecret(keyVaultUrl:string, secretName:string, clientID:string) {
 
     //
     // note that the clientID is optional here. 
@@ -23,7 +23,10 @@ async function getKeyVaultSecret(keyVaultUrl, secretName, clientID) {
     //    of your user assigned managed identity
     //
     
-    const keyVaultClient = new KeyVaultSecret.SecretClient(keyVaultUrl, new identity.ManagedIdentityCredential(clientID));
+    const credential = (clientID == null) ? 
+        new identity.ManagedIdentityCredential() : new identity.ManagedIdentityCredential(clientID);
+
+    const keyVaultClient = new KeyVaultSecret.SecretClient(keyVaultUrl, credential);
 
     const result = await keyVaultClient.getSecret(secretName);
 
@@ -39,11 +42,11 @@ async function getCosmosDBSecret() {
         return process.env.COSMOS_DB_KEY
     }
     else {
-        const managedIDClientId = process.env.MANAGED_IDENTITY_CLIENT_ID;
-        const keyVaultUrl = "https://" + process.env.KEY_VAULT_INSTANCE + ".vault.azure.net/";
-        const cosmosDBSecretName = process.env.COSMOS_DB_SECRET_NAME;
+        const managedIDClientId:any = null || process.env.MANAGED_IDENTITY_CLIENT_ID;
+        const keyVaultUrl:any = "https://" + process.env.KEY_VAULT_INSTANCE + ".vault.azure.net/";
+        const cosmosDBSecretName:any = process.env.COSMOS_DB_SECRET_NAME;
 
-        var value = await getKeyVaultSecret(keyVaultUrl, cosmosDBSecretName, managedIDClientId);
+        var value:string = await getKeyVaultSecret(keyVaultUrl, cosmosDBSecretName, managedIDClientId);
         return value;
     }
 };
@@ -53,6 +56,5 @@ async function getCosmosDBSecret() {
 module.exports = {
     getKeyVaultSecret,
     getCosmosDBSecret
-
 };
 
