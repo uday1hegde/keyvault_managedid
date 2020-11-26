@@ -22,7 +22,7 @@ app.use(function timeLog(req:any, _res:any, next:any) {
     next();
 });
 app.get('/secret', function(_req:any, res:any) {
-    vaultHelper.getsecret()
+    vaultHelper.getSecret()
     .then (function(response:any) {
         res.json(response);
     });
