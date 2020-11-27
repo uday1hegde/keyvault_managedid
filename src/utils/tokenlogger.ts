@@ -1,4 +1,5 @@
 import {GetTokenOptions, TokenCredential} from  "@azure/core-http";
+var logger = require("./loghelper").logger;
 
 
 class LoggingCredential implements TokenCredential {
