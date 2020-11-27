@@ -1,5 +1,6 @@
 import {GetTokenOptions, TokenCredential} from  "@azure/core-http";
 var logger = require("./loghelper").logger;
+const jwt = require("jsonwebtoken");
 
 
 class LoggingCredential implements TokenCredential {
@@ -21,7 +22,8 @@ class LoggingCredential implements TokenCredential {
         return this.credential.getToken(scopes, options)
                 .then (function(response) {
                     var token:any = response;
-                    logger.info(token);
+                    var decoded = jwt.decode(token);
+                    logger.info(decoded);
                     logger.info("Got token with client_id %s", token.client_id);
                     return response;
                 });
