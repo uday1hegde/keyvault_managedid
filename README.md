@@ -6,9 +6,9 @@ Getting Started
 
 This code sample in node shows how to use managed identity to get a secret from keyvault.
 It has a generic function to read the secret: getKeyVaultSecret: which given the vault url, the secret name and id of the managed identity, reads the secret and returns it.
-There is also an example usage: getCosmosDBSecret: which reads the env for the vault and secretname, or for localhost environment where you 
-dont have a managed identity, reads the cosmos db secret from env.
 
+This also logs the identity (appid and object id) of the managed id that was returned for token response. 
+If you are using systemAssigned managed identities, and need to log the id of the token issued, this is sample for that purpose
 
 
 Prerequisites
@@ -19,5 +19,10 @@ Make sure this identity has been granted access to your Azure keyvault, by going
 Installing
 
 npm run build, builds the js files
-npm run start, shows an example
+npm run start, runs the server
+
+Running:
+This implements 2 api: get /secret, gets the secret for the secret and keyvault URL specified in the environment variables.
+get /id/:id/secret allows you to say what managedid to use to get the secret
+
 

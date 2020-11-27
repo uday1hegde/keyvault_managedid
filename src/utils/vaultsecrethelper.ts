@@ -12,17 +12,10 @@ async function getKeyVaultSecret(keyVaultUrl:string, secretName:string, clientID
     //
     // note that the clientID is optional here. 
     // The keyvault secret client has an interesting behavior as follows:
-    // if the hosting app has a system assigned identity, it always tries that no matter what. And if you pass 
-    // a clientID for your managed identity,  it will try that as well as the system assigned identity. 
-    // That ends up in this strange behavior:
-    // 1) If system assigned identity has permission to keyault, you will always get the secret using that identity:
-    //    no matter what you specified for clientid. If you specified an incorrect managed identity, that error is swallowed.
-    // 2) If system assigned identity does not have permission to keyvault, and the id you specified has permission, 
-    //    you will get the secret using the id you specified
-    // 3) if system assigned identity does not have permission to keyvault, and the id you specified is wrong or does not 
-    //    have permission to keyvault, the error thrown only shows that the system assigned identity does not have permission. no mention is made about the id you provided.
-    // 4) only if you dont have a system assigned identity will you see any errors caused by using the client id 
-    //    of your user assigned managed identity
+    // 1) If you dont specify an id or id does not exist on the compute, 
+    // system assigned identity is used
+    // 2) if system assigned is not there, and you specify a clientID not assigned to the compute, you get "unknown error"
+    // An unknown error occurred and no additional details are available (status code 400)
     //
     
     logger.info("in get secret, managed id is %s", clientID ? clientID: "undefined");
