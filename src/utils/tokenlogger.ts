@@ -21,8 +21,12 @@ class LoggingCredential implements TokenCredential {
     
         return this.credential.getToken(scopes, options)
                 .then (function(response) {
-                    var token:any = response;
+                    var resp:any = response;
+                    var token:any = resp.token;
+                    logger.info(token);
+                    logger.info("showing token header and payload");
                     var decoded = jwt.decode(token, {complete : true});
+
                     logger.info(decoded.header);
                     logger.info(decoded.payload);
 
