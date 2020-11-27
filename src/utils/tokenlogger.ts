@@ -26,4 +26,4 @@ class LoggingCredential implements TokenCredential {
     }
 }
 
-module.exports= LoggingCredential;
+module.exports= {LoggingCredential};

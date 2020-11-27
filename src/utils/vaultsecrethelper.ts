@@ -42,8 +42,7 @@ async function getKeyVaultSecret(keyVaultUrl:string, secretName:string, clientID
 // getSecret: this function either reads the secret from the env (for localhost testing ), or reads the 
 // keyvault url, secretname etc from env and tries to get the secret from keyvault
 //
-async function getSecret() {
-    const managedIDClientId:any = null || process.env.MANAGED_IDENTITY_CLIENT_ID;
+async function getSecret(managedIDClientId:string) {
  
     var keyVaultUrl:string;
     var secretName:string; 
@@ -75,6 +74,6 @@ async function getSecret() {
 
 
 
-module.exports = getSecret;
+module.exports = {getSecret};
 
 
