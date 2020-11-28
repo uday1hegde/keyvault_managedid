@@ -23,6 +23,11 @@ class LoggingCredential implements TokenCredential {
                     if (response) {                    
                         var decoded = jwt.decode(response.token, {complete : true});
                         logger.info("Managed id: app id %s obj id %s", decoded.payload.appid, decoded.payload.oid);
+			logger.info("scopes");
+			logger.info(scopes);
+			logger.info(options);
+			logger.info("token");
+			logger.info(response);
                     }
                     return response;
                 });
