@@ -1,7 +1,6 @@
 "use strict";
 const kvSecret = require('@azure/keyvault-secrets');
 const identity = require('@azure/identity');
-const tokenLogger = require("./tokenlogger");
 var logger = require("./loghelper").logger;
 //
 // getKeyVaultSecret reads the secret from keyvault using managed identity
@@ -18,13 +17,11 @@ async function getKeyVaultSecret(keyVaultUrl:string, secretName:string, clientID
     // An unknown error occurred and no additional details are available (status code 400)
     //
     
-    logger.info("in get secret, managed id is %s", clientID ? clientID: "undefined");
+    logger.debug("in get secret, managed id is %s", clientID ? clientID: "undefined");
     const credential = (clientID == null) ? 
         new identity.ManagedIdentityCredential() : new identity.ManagedIdentityCredential(clientID);
 
-    const logCredential = new tokenLogger.LoggingCredential(credential);
-
-    const keyVaultClient = new kvSecret.SecretClient(keyVaultUrl, logCredential);
+    const keyVaultClient = new kvSecret.SecretClient(keyVaultUrl, credential);
 
     const result = await keyVaultClient.getSecret(secretName);
 
