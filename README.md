@@ -7,9 +7,6 @@ Getting Started
 This code sample in node shows how to use managed identity to get a secret from keyvault.
 It has a generic function to read the secret: getKeyVaultSecret: which given the vault url, the secret name and id of the managed identity, reads the secret and returns it.
 
-This also logs the identity (appid and object id) of the managed id that was returned for token response. 
-If you are using systemAssigned managed identities, and need to log the id of the token issued, this is sample for that purpose
-
 
 Prerequisites
 
