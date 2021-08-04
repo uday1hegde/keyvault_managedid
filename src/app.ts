@@ -31,8 +31,8 @@ app.route('/secret')
             return;
         })
     })
-    .post(function(_req:any, res:any) {
-        vaultHelper.setSecret(null)
+    .post(function(req:any, res:any) {
+        vaultHelper.setSecret(null, req.body.secret )
         .then (function(response:any) {
             logHelper.logger.info(response);
             res.json(response);
@@ -61,7 +61,7 @@ app.route('/id/:id/secret')
         })
     })
     .post(function(req:any, res:any) {
-        vaultHelper.setSecret(req.params.id)
+        vaultHelper.setSecret(req.params.id, req.body.secret)
         .then (function(response:any) {
             logHelper.logger.info(response);
             res.json(response);
