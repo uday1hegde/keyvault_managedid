@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "dependencies": {
-    "@azure/identity": "^1.0.3",
+    "@azure/identity": "^1.5.0",
     "@azure/keyvault-secrets": "^4.0.4",
     "@types/node": "^14.0.14",
     "dotenv": "^8.2.0",
@@ -19,7 +19,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 0",
     "build": "tsc -p ./src",
-    "start": "node ./src/app.js"
+    "start": "node ./src/app.js",
+    "debug": "node ./src/app.js"
   },
   "author": "",
   "license": "ISC"

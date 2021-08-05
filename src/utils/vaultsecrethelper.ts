@@ -2,6 +2,7 @@
 const kvSecret = require('@azure/keyvault-secrets');
 const identity = require('@azure/identity');
 var logger = require("./loghelper").logger;
+
 //
 // getKeyVaultSecret reads the secret from keyvault using managed identity
 //
@@ -18,8 +19,18 @@ async function getKeyVaultSecret(keyVaultUrl:string, secretName:string, clientID
     //
     
     logger.debug("in get secret, managed id is %s", clientID ? clientID: "undefined");
-    const credential = (clientID == null) ? 
+    const managedIdCredential = (clientID == null) ? 
         new identity.ManagedIdentityCredential() : new identity.ManagedIdentityCredential(clientID);
+
+    // using a ChainedTokenCredential allows you to either use a managed identity when 
+    // hosted in Azure, or even run locally with your user credentials in Visual Studio
+    // or CLI.
+    // Another option is to use DefaultAzureCredential()
+    // the ClientID for the managed identity is only needed when using a userAssignedManagedIDentity
+    // in which case you can do  DefaultAzureCredential(managed_identity_client_id=cliendID)
+    const credential = new identity.ChainedTokenCredential(managedIdCredential,
+        new identity.AzureCliCredential(),
+        new identity.VisualStudioCodeCredential()); 
 
     const keyVaultClient = new kvSecret.SecretClient(keyVaultUrl, credential);
 
@@ -40,9 +51,18 @@ async function setKeyVaultSecret(keyVaultUrl:string, secretName:string, secretVa
     //
     
     logger.debug("in set secret, managed id is %s", clientID ? clientID: "undefined");
-    const credential = (clientID == null) ? 
+    const managedIdCredential = (clientID == null) ? 
         new identity.ManagedIdentityCredential() : new identity.ManagedIdentityCredential(clientID);
 
+    // using a ChainedTokenCredential allows you to either use a managed identity when 
+    // hosted in Azure, or even run locally with your user credentials in Visual Studio
+    // or CLI.
+    // Another option is to use DefaultAzureCredential()
+    // the ClientID for the managed identity is only needed when using a userAssignedManagedIDentity
+    // in which case you can do  DefaultAzureCredential(managed_identity_client_id=cliendID)
+    const credential = new identity.ChainedTokenCredential(managedIdCredential,
+        new identity.AzureCliCredential(),
+        new identity.VisualStudioCodeCredential()); 
     const keyVaultClient = new kvSecret.SecretClient(keyVaultUrl, credential);
 
     const result = await keyVaultClient.setSecret(secretName, secretValue);
@@ -88,11 +108,10 @@ async function getSecret(managedIDClientId:string) {
 // setSecret: this function  the secret from the env (for localhost testing ), or reads the 
 // keyvault url, secretname etc from env and tries to get the secret from keyvault
 //
-async function setSecret(managedIDClientId:string) {
+async function setSecret(managedIDClientId:string, secretValue:string) {
  
     var keyVaultUrl:string;
     var secretName:string; 
-    var secretValue: string
 
     if (process.env.KEY_VAULT_INSTANCE) {
         keyVaultUrl = process.env.KEY_VAULT_INSTANCE;
@@ -106,15 +125,6 @@ async function setSecret(managedIDClientId:string) {
     if (process.env.KEY_SECRET_NAME) {   
         secretName = process.env.KEY_SECRET_NAME;    
         logger.info("accessing keyvault to set secret %s", secretName);
-    }
-    else {
-        logger.info("in get key, keyname not defined");
-        throw(new Error("Key name missing"));
-    }
-
-    if (process.env.KEY_SECRET_VALUE) {   
-        secretValue = process.env.KEY_SECRET_VALUE;    
-        logger.info("accessing keyvault to set secret value %s", secretValue);
     }
     else {
         logger.info("in get key, keyname not defined");
